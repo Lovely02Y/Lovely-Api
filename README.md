@@ -7,11 +7,11 @@
 
 # Lovely-Api
 
-- 一个适用于 [随机图](http://x.521002.xyz:7007) 的Api
+- 一个适用于 [随机图](http://api.521002.xyz) 的Api
 
-- 一个适用于 [随机图](http://x.521002.xyz:7007) 的Api
+- 一个适用于 [随机图](http://api.521002.xyz) 的Api
 
-- 一个适用于 [随机图](http://x.521002.xyz:7007) 的Api
+- 一个适用于 [随机图](http://api.521002.xyz) 的Api
 
 ## 安装教程 
 
@@ -35,7 +35,8 @@ pnpm install
 ```
 
 ## 后台运行
-请使用 `pm2 start app.js --name Api` 后台运行
+- 请使用 `pm2 start app.js --name Api` 后台运行
+- 运行在 `7007` 端口
 
 ## 免责声明
 1.  本插件均为开源项目，严禁将本库内容用于任何商业用途或违法行为
