@@ -12,8 +12,14 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/resources/index.html');
 });
 
-app.get('/imgs', (req, res) => {
-    fs.readdir(imgs, (err, files) => {
+// 捕获所有未匹配的请求并重定向到根路由
+app.all('*', (req, res) => {
+    res.redirect('/');
+});
+
+// 创建一个函数来处理图片发送逻辑
+function sendRandomImage(folderPath, res) {
+    fs.readdir(folderPath, (err, files) => {
         if (err) {
             res.status(500).send('Internal Server Error');
             return;
@@ -21,26 +27,20 @@ app.get('/imgs', (req, res) => {
 
         const randomIndex = Math.floor(Math.random() * files.length);
         const randomImage = files[randomIndex];
-        const imagePath = path.join(imgs, randomImage);
+        const imagePath = path.join(folderPath, randomImage);
 
         res.sendFile(imagePath);
     });
+}
+
+app.get('/imgs', (req, res) => {
+    sendRandomImage(imgs, res);
 });
 
 app.get('/sese', (req, res) => {
-    fs.readdir(sese, (err, files) => {
-        if (err) {
-            res.status(500).send('Internal Server Error');
-            return;
-        }
-
-        const randomIndex = Math.floor(Math.random() * files.length);
-        const randomImage = files[randomIndex];
-        const imagePath = path.join(sese, randomImage);
-
-        res.sendFile(imagePath);
-    });
+    sendRandomImage(sese, res);
 });
+
 
 // 监听端口
 app.listen(port, () => {
