@@ -12,11 +12,6 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/resources/index.html');
 });
 
-// 捕获所有未匹配的请求并重定向到根路由
-app.all('*', (req, res) => {
-    res.redirect('/');
-});
-
 // 创建一个函数来处理图片发送逻辑
 function sendRandomImage(folderPath, res) {
     fs.readdir(folderPath, (err, files) => {
@@ -41,6 +36,10 @@ app.get('/sese', (req, res) => {
     sendRandomImage(sese, res);
 });
 
+// 捕获所有未匹配的请求并重定向到根路由
+app.all('*', (req, res) => {
+    res.redirect('/');
+});
 
 // 监听端口
 app.listen(port, () => {
