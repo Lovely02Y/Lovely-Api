@@ -39,15 +39,18 @@ const limiter = rateLimit({
   message: '你小子不准爬了哦！！！ 你爬的太多啦！！！'
 });
 
-// 获取当前时间并格式化
-const now = new Date();
-const dateString = now.toLocaleDateString();
-const timeString = now.toLocaleTimeString();
+// 定义一个函数来获取当前时间并格式化
+function getCurrentTime() {
+    const now = new Date();
+    const dateString = now.toLocaleDateString();
+    const timeString = now.toLocaleTimeString();
+    return `${dateString} ${timeString}`;
+}
 
 // 中间件函数：检查是否在白名单或黑名单中
 async function checkLists(req, res, next) {
     const clientIp = req.ip;
-    console.log(`日期: ${dateString} 时间: ${timeString} 访问IP: ${clientIp}`);
+    console.log(`当前时间: ${getCurrentTime()} 访问IP: ${clientIp}`);
 
     const { whitelist, blacklist } = await loadConfig();
 
