@@ -4,12 +4,21 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "app": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "monit": "pm2 monit",
+    "start": "pm2 start ./config/pm2.yaml && pm2 monit",
+    "stop": "pm2 delete ./config/pm2.yaml",
+    "restart": "pm2 restart ./config/pm2.yaml",
+    "log": "pm2 logs --lines 400 Lovely-Api"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2"
+    "pm2": "^5.3.1",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "js-yaml": "^4.1.0"
   }
 }
