@@ -17,7 +17,7 @@ app.set('trust proxy', 1);
 // 从 YAML 文件中读取白名单和黑名单
 async function loadConfig() {
     try {
-        const fileContents = await fsPromises.readFile(path.join(__dirname, 'config', 'white.yaml'), 'utf8');
+        const fileContents = await fsPromises.readFile(path.join(__dirname, 'config', 'pz.yaml'), 'utf8');
         const data = yaml.load(fileContents);
         return {
             whitelist: data.whitelist || [],

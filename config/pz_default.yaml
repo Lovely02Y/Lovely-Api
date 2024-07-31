@@ -1,0 +1,9 @@
+# 请注意，系统不会读取pz_default.yaml ！！！！
+# 【请勿直接修改此文件，且可能导致后续冲突】
+# 如需自定义可将文件【复制】一份，并重命名为 pz.yaml
+
+whitelist: #白名单IP
+  - 'x.x.x.x'
+
+blacklist: #黑名单IP
+  - 'x.x.x.x'
