@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const router = express.Router();
-const videos = '/path/to/your/videos/folder'; // 更改为你本地存储视频的文件夹路径
+const loli = ''; // 更改为你本地存储视频的文件夹路径
 
 // 创建一个函数来处理视频发送逻辑
 function sendRandomVideo(folderPath, res) {
@@ -21,7 +21,7 @@ function sendRandomVideo(folderPath, res) {
 
 // 路由处理
 router.get('/loli', (req, res) => {
-    sendRandomVideo(videos, res);
+    sendRandomVideo(loli, res);
 });
 
 module.exports = router;
