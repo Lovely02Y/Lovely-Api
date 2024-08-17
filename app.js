@@ -10,23 +10,8 @@ const port = 7007; // 要更改为你需要的对外端口号
 // 启用 trust proxy 以便 express-rate-limit 正确识别用户
 app.set('trust proxy', 1);
 
-// 从 YAML 文件中读取白名单和黑名单
-async function loadConfig() {
-    try {
-        const fileContents = await fsPromises.readFile(path.join(__dirname, 'config', 'pz.yaml'), 'utf8');
-        const data = yaml.load(fileContents);
-        return {
-            whitelist: data.whitelist || [],
-            blacklist: data.blacklist || []
-        };
-    } catch (err) {
-        console.error('Error loading config:', err);
-        return {
-            whitelist: [],
-            blacklist: []
-        };
-    }
-}
+// 存储 IP 请求计数
+const ipRequestCounts = new Map();
 
 // 创建一个速率限制中间件
 const limiter = rateLimit({
@@ -60,11 +45,54 @@ async function checkLists(req, res, next) {
         return next();
     }
 
-    // 否则应用速率限制中间件
+    // 记录请求次数
+    const currentTime = Date.now();
+    const requestCounts = ipRequestCounts.get(clientIp) || [];
+    // 只保留过去10分钟的请求记录
+    const recentRequests = requestCounts.filter(timestamp => currentTime - timestamp < 10 * 60 * 1000);
+    recentRequests.push(currentTime);
+    ipRequestCounts.set(clientIp, recentRequests);
+
+    // 检查是否超过了请求限制阈值（例如：每分钟超过20次请求）
+    if (recentRequests.length > 20) {
+        // 拉黑 IP 并更新配置文件
+        await addToBlacklist(clientIp);
+
+        return res.status(403).send('你小子今天爬太多了昂！！！ 给你ban了');
+    }
+
+    // 应用速率限制中间件
     return limiter(req, res, next);
 }
 
 app.use(checkLists);
+
+// 从 YAML 文件中读取白名单和黑名单
+async function loadConfig() {
+    try {
+        const fileContents = await fsPromises.readFile(path.join(__dirname, 'config', 'pz.yaml'), 'utf8');
+        const data = yaml.load(fileContents);
+        return {
+            whitelist: data.whitelist || [],
+            blacklist: data.blacklist || []
+        };
+    } catch (err) {
+        console.error('Error loading config:', err);
+        return {
+            whitelist: [],
+            blacklist: []
+        };
+    }
+}
+
+// 更新配置文件中的黑名单
+async function addToBlacklist(ip) {
+    const config = await loadConfig();
+    if (!config.blacklist.includes(ip)) {
+        config.blacklist.push(ip);
+        await fsPromises.writeFile(path.join(__dirname, 'config', 'pz.yaml'), yaml.dump(config), 'utf8');
+    }
+}
 
 // 导入分离的路由
 const imageRoutes = require('./apps/images');
